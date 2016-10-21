@@ -12,49 +12,50 @@ import org.springframework.web.bind.annotation.RequestMethod;
 /**
  * Created by steven on 10/19/16.
  */
+@RequestMapping("/customer")
 @Controller
 public class CustomerController {
 
-
     private CustomerService customerService;
 
-    @RequestMapping("/customers")
-    public String listAllCustomers(Model model) {
-        model.addAttribute("customers", customerService.listAllCustomers());
-        return "customers";
-    }
-
-    @RequestMapping("/customer/{id}")
-    public String getCustomerById(@PathVariable Integer id, Model model) {
-        model.addAttribute("customer", customerService.getCustomerById(id));
-        return "customer";
-    }
-
-    @RequestMapping("/customer/new")
-    public String createNewCustomer(Model model) {
-        model.addAttribute("customer", new Customer());
-        return "customerform";
-    }
-
-    @RequestMapping(value = "/customer", method = RequestMethod.POST)
-    public String saveOrUpdateCustomer(Customer customer) {
-        Customer saveCustomer = customerService.saveOrUpdateCustomer(customer);
-        return "redirect:/customer" + saveCustomer.getId();
-    }
-
-    @RequestMapping("/customer/edit/{id}")
-    public String edit(@PathVariable Integer id, Model model) {
-        model.addAttribute("customer", customerService.getCustomerById(id));
-        return "customerform";
-    }
-
-    @RequestMapping("/customer/delete/{id}")
-    public String delete(@PathVariable Integer id) {
-        customerService.deleteCustomer(id);
-        return "redirect:/customers";
-    }
     @Autowired
     public void setCustomerService(CustomerService customerService) {
         this.customerService = customerService;
+    }
+
+    @RequestMapping({"/list", "/"})
+    public String listCustomers(Model model){
+        model.addAttribute("customers", customerService.listAll());
+        return "customer/list";
+    }
+
+    @RequestMapping("/show/{id}")
+    public String showCustomer(@PathVariable Integer id, Model model){
+        model.addAttribute("customer", customerService.getById(id));
+        return "customer/show";
+    }
+
+    @RequestMapping("/edit/{id}")
+    public String edit(@PathVariable Integer id, Model model){
+        model.addAttribute("customer", customerService.getById(id));
+        return "customer/customerform";
+    }
+
+    @RequestMapping("/new")
+    public String newCustomer(Model model){
+        model.addAttribute("customer", new Customer());
+        return "customer/customerform";
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    public String saveOrUpdate(Customer customer){
+        Customer newCustomer = customerService.saveOrUpdate(customer);
+        return "redirect:customer/show/" + newCustomer.getId();
+    }
+
+    @RequestMapping("/delete/{id}")
+    public String delete(@PathVariable Integer id){
+        customerService.delete(id);
+        return "redirect:/customer/list";
     }
 }

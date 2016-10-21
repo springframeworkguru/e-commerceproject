@@ -1,99 +1,45 @@
 package com.springframework.ecommerce.services;
 
 import com.springframework.ecommerce.domain.Product;
+import com.springframework.ecommerce.repositories.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
  * Created by steven on 10/18/16.
  */
 @Service
+@Profile("springdatajpa")
 public class ProductServiceImpl implements ProductService {
 
-    private Map<Integer, Product> products;
+    private ProductRepository productRepository;
 
-    public ProductServiceImpl() {
-        loadProducts();
-    }
-
-    private void loadProducts() {
-        products = new HashMap<>();
-
-        Product product1 = new Product();
-        product1.setId(1);
-        product1.setDescription("Product 1");
-        product1.setPrice(new BigDecimal("12.99"));
-        product1.setImageUrl("http://example.com/product1");
-
-        products.put(1, product1);
-
-        Product product2 = new Product();
-        product2.setId(2);
-        product2.setDescription("Product 2");
-        product2.setPrice(new BigDecimal("14.99"));
-        product2.setImageUrl("http://example.com/product2");
-
-        products.put(2, product2);
-
-        Product product3 = new Product();
-        product3.setId(3);
-        product3.setDescription("Product 3");
-        product3.setPrice(new BigDecimal("34.99"));
-        product3.setImageUrl("http://example.com/product3");
-
-        products.put(3, product3);
-
-        Product product4 = new Product();
-        product4.setId(4);
-        product4.setDescription("Product 4");
-        product4.setPrice(new BigDecimal("44.99"));
-        product4.setImageUrl("http://example.com/product4");
-
-        products.put(4, product4);
-
-        Product product5 = new Product();
-        product5.setId(5);
-        product5.setDescription("Product 2");
-        product5.setPrice(new BigDecimal("25.99"));
-        product5.setImageUrl("http://example.com/product5");
-
-        products.put(5, product5);
+    @Override
+    public List<?> listAll() {
+        List<Product> products = new ArrayList<>();
+        productRepository.findAll().forEach(products::add);
+        return products;
     }
 
     @Override
-    public List<Product> listAllProducts() {
-        return new ArrayList<>(products.values());
+    public Product getById(Integer id) {
+        return productRepository.findOne(id);
     }
 
     @Override
-    public Product getProductById(Integer id) {
-        return products.get(id);
+    public Product saveOrUpdate(Product domainObject) {
+        return productRepository.save(domainObject);
     }
 
     @Override
-    public Product saveOrUpdateProduct(Product product) {
-        if(product != null) {
-            if(product.getId() == null) {
-                product.setId(getNextKey());
-            }
-            products.put(product.getId(), product);
-
-            return product;
-        } else {
-            throw new RuntimeException("The product cannot be null");
-        }
+    public void delete(Integer id) {
+        productRepository.delete(id);
     }
 
-    @Override
-    public void deleteProduct(Integer id) {
-        products.remove(id);
+    @Autowired
+    public void setProductRepository(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
-
-    private Integer getNextKey() {
-        return Collections.max(products.keySet()) + 1;
-    }
-
-
 }

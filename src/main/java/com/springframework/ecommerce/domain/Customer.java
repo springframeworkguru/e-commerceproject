@@ -1,10 +1,14 @@
 package com.springframework.ecommerce.domain;
 
+import javax.persistence.Entity;
+
 /**
  * Created by steven on 10/19/16.
  */
-public class Customer {
-    private Integer id;
+
+@Entity
+public class Customer extends AbstractDomainClass {
+
     private String firstName;
     private String lastName;
     private String email;
@@ -85,13 +89,5 @@ public class Customer {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 }

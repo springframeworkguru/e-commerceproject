@@ -7,13 +7,6 @@ import java.util.List;
 /**
  * Created by steven on 10/19/16.
  */
-public interface CustomerService {
+public interface CustomerService extends CRUDService<Customer>{
 
-    List<Customer> listAllCustomers();
-
-    Customer getCustomerById(Integer id);
-
-    Customer saveOrUpdateCustomer(Customer customer);
-
-    public void deleteCustomer(Integer id);
 }

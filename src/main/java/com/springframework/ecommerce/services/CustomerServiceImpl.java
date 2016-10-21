@@ -1,6 +1,9 @@
 package com.springframework.ecommerce.services;
 
 import com.springframework.ecommerce.domain.Customer;
+import com.springframework.ecommerce.repositories.CustomerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -9,50 +12,35 @@ import java.util.*;
  * Created by steven on 10/19/16.
  */
 @Service
+@Profile("springdatajpa")
 public class CustomerServiceImpl implements CustomerService {
 
-    private Map<Integer, Customer> customers;
+    private CustomerRepository customerRepository;
 
-    public CustomerServiceImpl() {
-        loadCustomers();
+    @Override
+    public List<?> listAll() {
+        List<Customer> customers = new ArrayList<>();
+        customerRepository.findAll().forEach(customers::add);
+        return customers;
     }
 
     @Override
-    public List<Customer> listAllCustomers() {
-        return new ArrayList<>(customers.values());
+    public Customer getById(Integer id) {
+        return customerRepository.findOne(id);
     }
 
     @Override
-    public Customer getCustomerById(Integer id) {
-        return customers.get(id);
+    public Customer saveOrUpdate(Customer domainObject) {
+        return customerRepository.save(domainObject);
     }
 
     @Override
-    public Customer saveOrUpdateCustomer(Customer customer) {
-        if(customer != null) {
-            if(customer.getId() == null) {
-                customer.setId(getNextKey());
-            }
-
-            return customers.put(customer.getId(), customer);
-        }
-        return customer;
+    public void delete(Integer id) {
+        customerRepository.delete(id);
     }
 
-    @Override
-    public void deleteCustomer(Integer id) {
-        customers.remove(id);
+    @Autowired
+    public void setCustomerRepository(CustomerRepository customerRepository) {
+        this.customerRepository = customerRepository;
     }
-
-    private Integer getNextKey() {
-        return Collections.max(customers.keySet()) + 1;
-    }
-
-    public void loadCustomers() {
-        customers = new HashMap<>();
-
-        Customer customer1 = new Customer();
-
-    }
-
 }

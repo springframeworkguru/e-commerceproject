@@ -7,7 +7,17 @@
     <link th:href="@{css/styles.css}" rel="stylesheet" media="screen"/>
 </head>
 <body>
-    <h2>This is a Thymeleaf page.</h2>
+    <div class="container">
+        <h2>This is my Thymeleaf index page.</h2>
+
+        <ul>
+            <li><a href="product/list">Products</a></li>
+            <li><a href="customer/list">Customers</a></li>
+            <li><a href="user/list">Users</a></li>
+        </ul>
+
+    </div>
+
     <script th:src="@{/webjars/jquery/3.1.1/jquery.min.js}"></script>
 </body>
 </html>

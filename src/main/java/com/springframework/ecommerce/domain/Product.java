@@ -1,23 +1,21 @@
 package com.springframework.ecommerce.domain;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 
 /**
  * Created by steven on 10/18/16.
  */
-public class Product {
-    private Integer id;
+@Entity
+public class Product extends AbstractDomainClass {
+
     private String description;
     private BigDecimal price;
     private String imageUrl;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getDescription() {
         return description;
