@@ -1,34 +1,46 @@
 package com.springframework.ecommerce.domain;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Transient;
+import com.springframework.ecommerce.domain.security.Role;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by steven on 10/20/16.
  */
 
 @Entity
-public class User extends AbstractDomainClass {
+public class User extends AbstractDomainClass  {
 
-    private String username;
+    private String userName;
 
     @Transient
     private String password;
 
-    private String encryptPassword;
-    private boolean enabled = true;
+    private String encryptedPassword;
+    private Boolean enabled = true;
 
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private Customer customer;
 
-    public String getUsername() {
-        return username;
+   // @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+  //  private Cart cart;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable
+    // ~ defaults to @JoinTable(name = "USER_ROLE", joinColumns = @JoinColumn(name = "user_id"),
+    //     inverseJoinColumns = @joinColumn(name = "role_id"))
+    private List<Role> roles = new ArrayList<>();
+
+    private Integer failedLoginAttempts = 0;
+
+    public String getUserName() {
+        return userName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserName(String username) {
+        this.userName = username;
     }
 
     public String getPassword() {
@@ -39,19 +51,19 @@ public class User extends AbstractDomainClass {
         this.password = password;
     }
 
-    public String getEncryptPassword() {
-        return encryptPassword;
+    public String getEncryptedPassword() {
+        return encryptedPassword;
     }
 
-    public void setEncryptPassword(String encryptPassword) {
-        this.encryptPassword = encryptPassword;
+    public void setEncryptedPassword(String encryptedPassword) {
+        this.encryptedPassword = encryptedPassword;
     }
 
-    public boolean isEnabled() {
+    public Boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 
@@ -59,7 +71,47 @@ public class User extends AbstractDomainClass {
         return customer;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+//    public void setCustomer(Customer customer) {
+//        this.customer = customer;
+//        customer.setUser(this);
+//    }
+//
+//    public Cart getCart() {
+//        return cart;
+//    }
+//
+//    public void setCart(Cart cart) {
+//        this.cart = cart;
+//    }
+
+    public List<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void addRole(Role role){
+        if(!this.roles.contains(role)){
+            this.roles.add(role);
+        }
+
+        if(!role.getUsers().contains(this)){
+            role.getUsers().add(this);
+        }
+    }
+
+    public void removeRole(Role role){
+        this.roles.remove(role);
+        role.getUsers().remove(this);
+    }
+
+    public Integer getFailedLoginAttempts() {
+        return failedLoginAttempts;
+    }
+
+    public void setFailedLoginAttempts(Integer failedLoginAttempts) {
+        this.failedLoginAttempts = failedLoginAttempts;
     }
 }

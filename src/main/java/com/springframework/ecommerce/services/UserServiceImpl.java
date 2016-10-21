@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by steven on 10/20/16.
  */
-@Service
+@Service("userService")
 @Profile("springdatajpa")
 public class UserServiceImpl implements UserService {
 
@@ -43,5 +43,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    @Override
+    public User findByUserName(String userName) {
+        return userRepository.findByUserName(userName);
     }
 }
