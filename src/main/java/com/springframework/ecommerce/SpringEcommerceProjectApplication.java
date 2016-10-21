@@ -8,6 +8,6 @@ import org.springframework.context.ApplicationContext;
 public class SpringEcommerceProjectApplication {
 
 	public static void main(String[] args) {
-		ApplicationContext context = SpringApplication.run(SpringEcommerceProjectApplication.class, args);
+		SpringApplication.run(SpringEcommerceProjectApplication.class, args);
 	}
 }
