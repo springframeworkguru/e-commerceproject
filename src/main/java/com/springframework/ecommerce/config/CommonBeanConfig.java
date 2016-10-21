@@ -1,4 +1,4 @@
-package com.springframework.ecommerce.controllers.config;
+package com.springframework.ecommerce.config;
 
 import org.springframework.context.annotation.Bean;
 import org.jasypt.util.password.StrongPasswordEncryptor;
